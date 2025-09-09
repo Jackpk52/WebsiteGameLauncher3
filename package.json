@@ -1,0 +1,21 @@
+{
+  "name": "dorime-game-launcher",
+  "version": "1.0.0",
+  "description": "A WebAssembly-based retro game launcher with 10+ real games for GitHub Pages.",
+  "main": "launcher.js",
+  "scripts": {
+    "start": "npx serve .",
+    "build": "echo \"No build step needed\""
+  },
+  "keywords": [
+    "games",
+    "launcher",
+    "wasm",
+    "retro",
+    "github-pages"
+  ],
+  "author": "MK BROTHERS",
+  "license": "MIT",
+  "dependencies": {},
+  "devDependencies": {}
+}
