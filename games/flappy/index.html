@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Flappy</title>
+<style>html,body{height:100%;margin:0;background:#000;color:#0f0;font-family:monospace}canvas{display:block;margin:10px auto;border:2px solid #0f0}</style>
+</head><body><canvas id="c" width="400" height="600"></canvas><div style="text-align:center">Click or space to flap</div>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d');let bird={x:80,y:300,vy:0},pipes=[],tick=0;
+function loop(){tick++; ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height); bird.vy+=0.4; bird.y+=bird.vy; if(tick%90==0){let gap=120; let top=Math.random()*(c.height-gap-100)+40; pipes.push({x:c.width,top,bot:top+gap})}
+  for(let p of pipes){p.x-=2; ctx.fillStyle='#0f0'; ctx.fillRect(p.x,0,50,p.top); ctx.fillRect(p.x,p.bot,50,c.height-p.bot); if(bird.x>p.x&&bird.x<p.x+50 && (bird.y<p.top||bird.y>p.bot)) reset()}
+  ctx.fillStyle='#ff0'; ctx.fillRect(bird.x-10,bird.y-10,20,20); if(bird.y>c.height) reset(); requestAnimationFrame(loop)}
+function reset(){bird={x:80,y:300,vy:0}; pipes=[]; tick=0}
+document.addEventListener('click',()=>bird.vy=-6); document.addEventListener('keydown',e=>{if(e.code=='Space')bird.vy=-6});
+loop();
+</script></body></html>

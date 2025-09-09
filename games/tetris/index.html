@@ -1,0 +1,17 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Tetris</title>
+<style>html,body{height:100%;margin:0;background:#000;color:#0f0;font-family:monospace}#wrap{display:flex;flex-direction:column;align-items:center;padding:8px}canvas{border:2px solid #0f0}</style>
+</head><body><div id="wrap"><div>Tetris - Arrow keys to move, Up to rotate, Space to drop</div><canvas id="c" width="240" height="400"></canvas></div>
+<script>
+const canvas=document.getElementById('c');const ctx=canvas.getContext('2d');
+const COLS=12,ROWS=20;let grid=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+const pieces='ILJOTSZ';function rnd(){return pieces[(Math.random()*pieces.length)|0]}
+const shapes={I:[[1,1,1,1]],O:[[1,1],[1,1]],T:[[0,1,0],[1,1,1]],S:[[0,1,1],[1,1,0]],Z:[[1,1,0],[0,1,1]],J:[[1,0,0],[1,1,1]],L:[[0,0,1],[1,1,1]]};
+function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,canvas.width,canvas.height); for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){if(grid[r][c]){ctx.fillStyle='#0f0';ctx.fillRect(c*20,r*20,18,18)}} if(cur){ctx.fillStyle='#0f0';for(let r=0;r<cur.shape.length;r++)for(let c=0;c<cur.shape[r].length;c++)if(cur.shape[r][c])ctx.fillRect((cur.x+c)*20,(cur.y+r)*20,18,18)}}
+function collide(shape,x,y){for(let r=0;r<shape.length;r++)for(let c=0;c<shape[r].length;c++)if(shape[r][c]){let nx=x+c,ny=y+r; if(nx<0||nx>=COLS||ny>=ROWS|| (ny>=0&&grid[ny][nx])) return true} return false}
+function rotate(s){const R=s.length, C=s[0].length; let r=[]; for(let c=0;c<C;c++){r[c]=[]; for(let rr=R-1;rr>=0;rr--) r[c].push(s[rr][c])} return r}
+function merge(){for(let r=0;r<cur.shape.length;r++)for(let c=0;c<cur.shape[r].length;c++)if(cur.shape[r][c])grid[cur.y+r][cur.x+c]=1; clearLines(); spawn()}
+function clearLines(){for(let r=ROWS-1;r>=0;r--){if(grid[r].every(x=>x)){grid.splice(r,1);grid.unshift(Array(COLS).fill(0)); r++}}}
+function spawn(){cur={shape:shapes[rnd()],x:4,y:-1}; if(collide(cur.shape,cur.x,cur.y)) grid=Array.from({length:ROWS},()=>Array(COLS).fill(0))}
+let cur=null; spawn(); let drop=0; function loop(){drop++; if(drop%20==0){if(!collide(cur.shape,cur.x,cur.y+1)) cur.y++; else merge()} draw(); requestAnimationFrame(loop)} loop();
+document.addEventListener('keydown',e=>{ if(e.keyCode==37 && !collide(cur.shape,cur.x-1,cur.y)) cur.x--; if(e.keyCode==39 && !collide(cur.shape,cur.x+1,cur.y)) cur.x++; if(e.keyCode==40 && !collide(cur.shape,cur.x,cur.y+1)) cur.y++; if(e.keyCode==38){let r=rotate(cur.shape); if(!collide(r,cur.x,cur.y)) cur.shape=r} if(e.keyCode==32){while(!collide(cur.shape,cur.x,cur.y+1))cur.y++; merge()} })
+</script></body></html>

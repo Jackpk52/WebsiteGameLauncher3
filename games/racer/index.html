@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Racer</title>
+<style>html,body{height:100%;margin:0;background:#000;color:#0f0;font-family:monospace}canvas{display:block;margin:10px auto;border:2px solid #0f0}</style>
+</head><body><canvas id="c" width="400" height="600"></canvas><div style="text-align:center">Move with arrow keys</div>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d');let car={x:180,y:500,w:40,h:60},obs=[],tick=0,score=0;
+document.addEventListener('keydown',e=>{if(e.key=='ArrowLeft')car.x-=30; if(e.key=='ArrowRight')car.x+=30});
+function loop(){tick++; ctx.fillStyle='#000';ctx.fillRect(0,0,c.width,c.height); ctx.fillStyle='#555';ctx.fillRect(60,0,280,c.height); ctx.fillStyle='#0f0';ctx.fillRect(car.x,car.y,car.w,car.h);
+  if(tick%40==0){obs.push({x:80+Math.floor(Math.random()*6)*40,y:-80,w:40,h:60})}
+  for(let o of obs){o.y+=6; ctx.fillStyle='red'; ctx.fillRect(o.x,o.y,o.w,o.h); if(o.y>c.height)score++; if(o.x<car.x+car.w && o.x+o.w>car.x && o.y<car.y+car.h && o.y+o.h>car.y){obs=[];score=0}}
+  ctx.fillStyle='#0f0';ctx.fillText('Score: '+score,10,20); requestAnimationFrame(loop)}
+loop();
+</script></body></html>

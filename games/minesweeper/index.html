@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Minesweeper</title>
+<style>html,body{height:100%;margin:0;background:#000;color:#0f0;font-family:monospace}td{width:36px;height:36px;border:1px solid #0f0;text-align:center;color:#0f0}</style>
+</head><body><div id="board"></div>
+<script>
+const w=10,h=8,mines=12; let board=[];
+function init(){board=[];for(let y=0;y<h;y++){board[y]=[];for(let x=0;x<w;x++){board[y][x]={m:false,f:false,v:0}}}
+  let placed=0; while(placed<mines){let x=Math.floor(Math.random()*w),y=Math.floor(Math.random()*h); if(!board[y][x].m){board[y][x].m=true;placed++}}
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){let count=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){let nx=x+dx,ny=y+dy; if(nx>=0&&ny>=0&&nx<w&&ny<h && board[ny][nx].m)count++;} board[y][x].v=count} render()}
+function render(){let html='<table style="border-collapse:collapse;margin:auto">'; for(let y=0;y<h;y++){html+='<tr>'; for(let x=0;x<w;x++){let c=board[y][x]; html+=`<td data-x="${x}" data-y="${y}">${c.f? 'F' : (c.revealed? (c.m? '💣' : c.v||'') : '')}</td>`} html+='</tr>'} html+='</table>'; document.getElementById('board').innerHTML=html;
+  document.querySelectorAll('#board td').forEach(td=>{td.oncontextmenu=e=>{e.preventDefault(); let x=+td.dataset.x,y=+td.dataset.y; board[y][x].f=!board[y][x].f; render()}; td.onclick=()=>{let x=+td.dataset.x,y=+td.dataset.y; if(board[y][x].m){alert('Boom'); init(); return} board[y][x].revealed=true; if(board[y][x].v==0) for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){let nx=x+dx,ny=y+dy; if(nx>=0&&ny>=0&&nx<w&&ny<h && !board[ny][nx].revealed) document.querySelector(`[data-x='${nx}'][data-y='${ny}']`).click()} render()}})
+}
+init();
+</script></body></html>

@@ -1,0 +1,19 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Chess</title>
+<style>html,body{height:100%;margin:0;background:#000;color:#0f0;font-family:monospace}table{border-collapse:collapse;margin:auto}td{width:60px;height:60px;text-align:center;vertical-align:middle;font-size:28px}</style>
+</head><body><div style="text-align:center">Click a piece then click destination. Simple 2-player moves.</div><div id="board"></div>
+<script>
+const boardEl=document.getElementById('board');
+const startFEN=[
+['r','n','b','q','k','b','n','r'],
+['p','p','p','p','p','p','p','p'],
+['','','','','','','',''],
+['','','','','','','',''],
+['','','','','','','',''],
+['','','','','','','',''],
+['P','P','P','P','P','P','P','P'],
+['R','N','B','Q','K','B','N','R']];
+let board=startFEN.map(r=>r.slice());
+let sel=null; function render(){ let html='<table>'; for(let y=0;y<8;y++){html+='<tr>'; for(let x=0;x<8;x++){let c=board[y][x]||''; let color=((x+y)%2)?'#444':'#999'; html+=`<td style="background:${color}" data-x="${x}" data-y="${y}">${c}</td>` } html+='</tr>' } html+='</table>'; boardEl.innerHTML=html;
+  boardEl.querySelectorAll('td').forEach(td=>td.onclick=()=>{const x=+td.dataset.x,y=+td.dataset.y; if(sel){board[y][x]=board[sel.y][sel.x]; board[sel.y][sel.x]=''; sel=null; render(); return} if(board[y][x]){sel={x,y}} })}
+render();
+</script></body></html>

@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Platformer</title>
+<style>html,body{height:100%;margin:0;background:#000;color:#0f0;font-family:monospace}canvas{display:block;margin:10px auto;border:2px solid #0f0}</style>
+</head><body><canvas id="c" width="720" height="400"></canvas><div style="text-align:center">Arrow keys to move, Up to jump</div>
+<script>
+const c=document.getElementById('c'),ctx=c.getContext('2d');let player={x:50,y:300,w:30,h:40,vx:0,vy:0,on:false}; const platforms=[{x:0,y:360,w:720,h:40},{x:200,y:300,w:120,h:10},{x:380,y:240,w:120,h:10}];
+document.addEventListener('keydown',e=>{if(e.key=='ArrowLeft')player.vx=-3; if(e.key=='ArrowRight')player.vx=3; if(e.key=='ArrowUp' && player.on) {player.vy=-10}});
+document.addEventListener('keyup',e=>{if(e.key=='ArrowLeft' || e.key=='ArrowRight')player.vx=0});
+function loop(){player.vy+=0.5; player.x+=player.vx; player.y+=player.vy; player.on=false;
+  for(let p of platforms){ if(player.x+player.w>p.x && player.x<p.x+p.w && player.y+player.h>p.y && player.y+player.h<p.y+20 && player.vy>=0){ player.y=p.y-player.h; player.vy=0; player.on=true } }
+  ctx.fillStyle='#000'; ctx.fillRect(0,0,c.width,c.height); ctx.fillStyle='#0f0'; for(let p of platforms)ctx.fillRect(p.x,p.y,p.w,p.h); ctx.fillRect(player.x,player.y,player.w,player.h); requestAnimationFrame(loop)}
+loop();
+</script></body></html>
